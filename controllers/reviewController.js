@@ -1,18 +1,24 @@
 const { addReview, updateReview, deleteReview, hasUserReviewed } = require('../models/reviewModel');
 
 const submitReview = async (req, res) => {
-    const { id: bookId } = req.params;
+    // console.log('req', req.user);
+    // console.log('req', req.params.id);
+    const  id  = req.params.id;
     const { rating, comment } = req.body;
     const userId = req.user.id;
 
-    const alreadyReviewed = await hasUserReviewed(userId, bookId);
+    // console.log("id", id)
+    
+    // console.log("rating, comment", rating, comment)
+
+    const alreadyReviewed = await hasUserReviewed(userId, id);
 
     if (alreadyReviewed) {
         return res.status(400).json({ message: 'You already reviewed this book' });
     }
 
-    const review = await addReview(userId, bookId, rating, comment);
-    res.status(201).json(review);
+    const review = await addReview(userId, id, rating, comment);
+    return res.status(201).json(review);
 };
 
 const modifyReview = async (req, res) => {
